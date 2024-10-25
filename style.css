@@ -1,0 +1,86 @@
+body {
+    margin: 0;
+    font-family: 'Helvetica', Arial, sans-serif;
+    display: flex;
+    overflow: hidden; /* 전체 페이지의 스크롤 방지 */
+}
+
+#map {
+    height: 100vh;
+    width: 70%;
+    position: relative;
+}
+
+#sidebar {
+    width: 30%;
+    height: 100vh;
+    background-color: #f8f9fa;
+    padding: 20px;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+.date-selector-container {
+    overflow-x: auto; /* 좌우 스크롤 가능 */
+    white-space: nowrap;
+    padding-bottom: 10px;
+}
+
+.date-selector {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+}
+
+.date-button {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+    min-width: 120px;
+    transition: background-color 0.3s ease;
+}
+
+.date-button:hover, .date-button.selected {
+    background-color: #f0f0f0;
+    border-color: #007bff;
+    color: #007bff;
+}
+
+#location-info {
+    margin-top: 20px;
+}
+
+.location-card {
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.location-card img {
+    width: 100%;
+    height: auto;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.location-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.location-button:hover {
+    background-color: #0056b3;
+}
+
