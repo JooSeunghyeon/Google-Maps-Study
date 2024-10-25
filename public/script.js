@@ -97,7 +97,7 @@ function showAllMarkers() {
 
     locationInfo.innerHTML = ""; // 기존 내용 제거
 
-    markers.forEach(marker => marker.map = map); // 모든 마커 표시
+    markers.forEach(marker => marker.setMap(map)); // 모든 마커 표시
 
     for (let key in locations) {
         locations[key].forEach(location => {
@@ -120,12 +120,12 @@ function filterByDate(dateKey) {
     });
 
     locationInfo.innerHTML = ""; // 기존 내용을 비움
-    markers.forEach(marker => marker.map = null); // 모든 마커 숨기기
+    markers.forEach(marker => marker.setMap(null)); // 모든 마커 숨기기
 
     if (locations[dateKey]) {
         locations[dateKey].forEach(location => {
             const marker = addMarker(location.position, location.img, location);
-            marker.map = map; // 선택된 날짜의 마커만 지도에 추가
+            marker.setMap(map); // 선택된 날짜의 마커만 지도에 추가
             locationInfo.appendChild(createLocationCard(location));
         });
     } else {
@@ -135,16 +135,13 @@ function filterByDate(dateKey) {
 
 // 마커 추가 함수 (커스텀 마커 이미지 포함 및 클릭 시 이동)
 function addMarker(position, imageUrl, locationData) {
-    const marker = new google.maps.marker.AdvancedMarkerElement({
+    const marker = new google.maps.Marker({
         position: position,
         map: null, // 초기에는 숨김 상태로
-        content: document.createElement('div'),
-        options: {
-            icon: {
-                url: imageUrl,
-                scaledSize: new google.maps.Size(35, 35),
-                anchor: new google.maps.Point(15, 15)
-            }
+        icon: {
+            url: imageUrl,
+            scaledSize: new google.maps.Size(35, 35),
+            anchor: new google.maps.Point(15, 15)
         }
     });
 
