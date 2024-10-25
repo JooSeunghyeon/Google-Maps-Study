@@ -16,6 +16,23 @@
             <h2>데이터를 선택하세요</h2>
             <p>날짜에 맞는 데이터를 표시합니다.</p>
         </div>
+
+        <!-- 데이터 추가용 폼 -->
+        <div id="data-input">
+            <div id="data-input-header">
+                <button id="close-button" class="control-button">x</button>
+                <button id="minimize-button" class="control-button">−</button>
+            </div>
+            <h3>데이터 추가</h3>
+            <input type="text" id="title" placeholder="제목" required><br>
+            <input type="text" id="description" placeholder="내용" required><br>
+            <input type="text" id="img" placeholder="이미지 URL" required><br>
+            <input type="text" id="lat" placeholder="위도" required><br>
+            <input type="text" id="lng" placeholder="경도" required><br>
+            <input type="date" id="date" required><br>
+            <button id="add-data-button">추가하기</button>
+        </div>
+
     </div>
     <script src="script.js"></script>
 </body>

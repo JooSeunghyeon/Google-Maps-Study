@@ -68,7 +68,14 @@ function createDateButton(date, dataKey, label, isDisabled = false) {
     let button = document.createElement('button');
     button.classList.add('date-button');
     button.innerText = label;
-    button.setAttribute('data-date', dataKey);
+    
+    // data-date 속성을 날짜로 설정
+    if (date) {
+        button.setAttribute('data-date', date.toISOString().split('T')[0]); // 날짜만 남기도록 수정
+    } else {
+        button.setAttribute('data-date', dataKey); // "전체" 같은 키 처리
+    }
+    
     button.disabled = isDisabled;
     button.onclick = () => {
         if (dataKey === "전체") {
@@ -82,6 +89,7 @@ function createDateButton(date, dataKey, label, isDisabled = false) {
     
     dateSelector.appendChild(button);
 }
+
 
 // 모든 마커 표시 함수
 function showAllMarkers() {
@@ -217,13 +225,80 @@ function addLocationButton() {
 // 구글 맵 초기화 함수
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: 37.539886, lng: 127.214130 },
+        center: { lat: 37.539886, lng: 127.214130 }, // 경기도 하남으로 설정
         zoom: 12
     });
 
     addLocationButton(); // 내 위치 조회 버튼 추가
     generateDates(); // 날짜 버튼 생성
 }
+
+// 데이터 추가 후 입력 필드 초기화 및 날짜 버튼 정렬 함수
+function resetForm() {
+    document.getElementById('title').value = '';
+    document.getElementById('description').value = '';
+    document.getElementById('img').value = '';
+    document.getElementById('lat').value = '';
+    document.getElementById('lng').value = '';
+    document.getElementById('date').value = '';
+}
+
+// 날짜 버튼 정렬 함수
+function sortDateButtons() {
+    const dateSelector = document.getElementById('date-selector');
+    const buttons = Array.from(dateSelector.querySelectorAll('.date-button')).filter(button => button.getAttribute('data-date') !== "전체");
+    
+    // 날짜순으로 정렬
+    buttons.sort((a, b) => {
+        const dateA = new Date(a.getAttribute('data-date'));
+        const dateB = new Date(b.getAttribute('data-date'));
+        return dateA - dateB; // 날짜 비교
+    });
+    
+    // "전체" 버튼을 제외하고 정렬된 버튼을 다시 추가
+    buttons.forEach(button => dateSelector.appendChild(button));
+}
+
+// 데이터 추가 기능 구현
+document.getElementById('add-data-button').addEventListener('click', () => {
+    const title = document.getElementById('title').value;
+    const description = document.getElementById('description').value;
+    const img = document.getElementById('img').value;
+    const lat = parseFloat(document.getElementById('lat').value);
+    const lng = parseFloat(document.getElementById('lng').value);
+    const date = document.getElementById('date').value;
+
+    if (title && description && img && !isNaN(lat) && !isNaN(lng) && date) {
+        const newLocation = {
+            title: title,
+            description: description,
+            img: img,
+            position: { lat: lat, lng: lng }
+        };
+
+        // 날짜 기반으로 locations에 데이터 추가
+        if (!locations[date]) {
+            locations[date] = [];
+            createDateButton(new Date(date), date, formatDate(new Date(date))); // 버튼 추가
+        }
+        locations[date].push(newLocation);
+
+        // 마커 추가
+        const marker = addMarker(newLocation.position, newLocation.img, newLocation);
+        marker.setMap(map);
+
+        // 폼 초기화
+        resetForm();
+
+        // 날짜 버튼 정렬
+        sortDateButtons();
+
+        alert('데이터가 성공적으로 추가되었습니다!');
+    } else {
+        alert('모든 필드를 채워주세요!');
+    }
+});
+
 
 async function loadGoogleMapsApi() {
     try {
@@ -240,4 +315,27 @@ async function loadGoogleMapsApi() {
     }
 }
 
-window.onload = loadGoogleMapsApi;
+// 페이지가 로드된 후 실행될 코드
+window.onload = function() {
+    loadGoogleMapsApi(); // Google Maps API 로드
+    
+    // 데이터 추가 폼 닫기 및 축소 기능 구현
+    document.getElementById('close-button').addEventListener('click', () => {
+        const dataInput = document.getElementById('data-input');
+        
+        // 먼저 hidden 클래스를 추가하여 애니메이션 적용
+        dataInput.classList.add('hidden');
+        
+        // 애니메이션이 끝난 후에 폼을 완전히 숨기기
+        setTimeout(() => {
+            dataInput.style.display = 'none'; // 완전히 사라짐
+        }, 300); 
+    });
+
+    document.getElementById('minimize-button').addEventListener('click', () => {
+        const dataInput = document.getElementById('data-input');
+        dataInput.classList.toggle('minimized'); // 폼을 축소 또는 확장
+    });
+
+};
+
