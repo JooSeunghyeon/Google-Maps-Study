@@ -31,6 +31,19 @@ let locations = {
     ]
 };
 
+// 다크 모드와 화이트 모드 스타일 정의
+const darkModeStyle = [
+    { elementType: 'geometry', stylers: [{ color: '#212121' }] },
+    { elementType: 'labels.text.stroke', stylers: [{ color: '#212121' }] },
+    { elementType: 'labels.text.fill', stylers: [{ color: '#757575' }] },
+    { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#2c2c2c' }] },
+    { featureType: 'road', elementType: 'labels.text.fill', stylers: [{ color: '#8a8a8a' }] },
+    { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#3c3c3c' }] },
+    { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#000000' }] },
+];
+
+const lightModeStyle = []; // 기본 화이트 모드 스타일 (빈 배열)
+
 // 날짜 포맷팅 함수 (YY년 MM월 DD일 형식)
 function formatDate(date) {
     const year = (date.getFullYear() % 100).toString().padStart(2, '0');
@@ -299,6 +312,33 @@ document.getElementById('add-data-button').addEventListener('click', () => {
     }
 });
 
+
+async function loadGoogleMapsApi() {
+    try {
+        const response = await fetch('/api-key');
+        const data = await response.json();
+        const apiKey = data.apiKey;
+
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&loading=async&callback=initMap`;
+        script.async = true;
+        document.head.appendChild(script);
+    } catch (error) {
+        console.error('API 키를 로드할 수 없습니다:', error);
+    }
+}
+
+// 다크 모드/화이트 모드 토글 기능
+document.getElementById('toggle-theme-button').addEventListener('click', () => {
+    const currentMapType = map.get('styles');
+    if (currentMapType === darkModeStyle) {
+        map.setOptions({ styles: lightModeStyle });
+        document.getElementById('toggle-theme-button').innerText = '🌙';
+    } else {
+        map.setOptions({ styles: darkModeStyle });
+        document.getElementById('toggle-theme-button').innerText = '☀️';
+    }
+});
 
 async function loadGoogleMapsApi() {
     try {
