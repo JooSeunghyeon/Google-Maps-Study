@@ -156,13 +156,14 @@ function filterByDate(dateKey) {
 
 // 마커 추가 함수 (커스텀 마커 이미지 포함 및 클릭 시 이동)
 function addMarker(position, imageUrl, locationData) {
+
     const marker = new google.maps.Marker({
         position: position,
         map: null, // 초기에는 숨김 상태로
         icon: {
             url: imageUrl,
             scaledSize: new google.maps.Size(35, 35),
-            anchor: new google.maps.Point(15, 15)
+            anchor: new google.maps.Point(15, 15),
         }
     });
 
@@ -311,22 +312,6 @@ document.getElementById('add-data-button').addEventListener('click', () => {
         alert('모든 필드를 채워주세요!');
     }
 });
-
-
-async function loadGoogleMapsApi() {
-    try {
-        const response = await fetch('/api-key');
-        const data = await response.json();
-        const apiKey = data.apiKey;
-
-        const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&loading=async&callback=initMap`;
-        script.async = true;
-        document.head.appendChild(script);
-    } catch (error) {
-        console.error('API 키를 로드할 수 없습니다:', error);
-    }
-}
 
 // 다크 모드/화이트 모드 토글 기능
 document.getElementById('toggle-theme-button').addEventListener('click', () => {
